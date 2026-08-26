@@ -66,6 +66,19 @@
     font-family: var(--font-display);
     letter-spacing: -0.03em;
     line-height: 1.12;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ER ligature: R shares the E’s right sidebearing. */
+  .liga-er {
+    font-kerning: none;
+    font-variant-ligatures: none;
+    letter-spacing: 0;
+  }
+  .liga-er-r {
+    margin-left: -0.12em;
   }
 
   ::selection {

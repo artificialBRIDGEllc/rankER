@@ -10,6 +10,7 @@ import { cn } from "@/lib/cn";
 import { FAQ, LAB_LIFTS, LAB_NOTE } from "@/lib/proof";
 import { ONE_TIME_PACKS, PLANS } from "@/lib/pricing";
 import { useAppStore } from "@/lib/store";
+import { Wordmark } from "@/components/wordmark";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -83,6 +84,7 @@ function Home() {
             <Sparkles className="size-3.5" />
             Lab CWV · Brand 9.5 · HIPAA packs
           </Badge>
+          <Wordmark tone="display" className="reveal mb-3 text-2xl text-fg sm:text-3xl" />
           <h1 className="reveal reveal-d1 max-w-3xl font-display text-4xl text-fg sm:text-6xl md:text-[4.2rem]">
             Rank in the top 1%.
             <span className="mt-1 block italic text-accent">Then look like it.</span>

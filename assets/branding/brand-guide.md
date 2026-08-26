@@ -10,9 +10,18 @@ Editorial ranking mark: two rising bars + a **typeset** capital R. The R is Figt
 
 ## Type
 
-- Display: Newsreader
-- UI / wordmark: Figtree 400–600
+- Display: Newsreader (opsz 6–72). Common ligatures on (`fi` `fl` `ff` `ffi` `ffl`).
+- UI / wordmark: Figtree 400–600. **No OpenType ligatures** in this cut.
 - Mark letter: Figtree 600 “R”
+
+## Ligatures
+
+Figtree ships `ccmp`, `frac`, `tnum`/`pnum` — not `liga`. Newsreader ships standard `liga` only.
+
+The brand ligature is **ER**: two Figtree capitals with the R tucked −0.12em under the E’s arm. Never draw ER as a custom path. Do not ligate “rank”.
+
+- UI: Figtree `rank` + ER ligature
+- Display: Newsreader italic `rank` + Figtree ER ligature
 
 ## Color
 

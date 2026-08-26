@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { LogoMark } from "./logo-mark";
+import { Wordmark } from "./wordmark";
 
 export function SiteFooter() {
   return (
@@ -7,7 +8,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-2 font-medium text-fg">
           <LogoMark className="size-6" />
-          rankER
+          <Wordmark />
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-2">
           <Link to="/build" className="hover:text-fg">
