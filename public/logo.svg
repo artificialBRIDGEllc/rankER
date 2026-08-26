@@ -1,10 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="rankER">
   <rect width="32" height="32" rx="7" fill="#070B12"/>
-  <rect x="4.4" y="18.2" width="3.4" height="7.8" rx="1" fill="#8B9BB4"/>
-  <rect x="9" y="13" width="3.4" height="13" rx="1" fill="#C5D0DC"/>
-  <g fill="none" stroke="#E8EEF7" stroke-width="3.6" stroke-linecap="butt" stroke-linejoin="round">
-    <path d="M15.8 6.6v19.4"/>
-    <path d="M15.8 6.6h6.6c3.4 0 4.2 2.2 4.2 5.1s-.8 5.1-4.2 5.1H15.8"/>
-    <path d="M17.7 16.8 26.6 26"/>
-  </g>
+  <rect x="4.6" y="18.4" width="3.3" height="7.6" rx="0.9" fill="#8B9BB4"/>
+  <rect x="9" y="13" width="3.3" height="13" rx="0.9" fill="#C5D0DC"/>
+  <text x="13.4" y="26.1" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18.5" font-weight="700" fill="#E8EEF7">R</text>
 </svg>
