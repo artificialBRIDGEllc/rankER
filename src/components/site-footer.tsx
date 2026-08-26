@@ -1,13 +1,12 @@
 import { Link } from "@tanstack/react-router";
+import { LogoMark } from "./logo-mark";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-border py-10 text-sm text-muted">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-2 font-medium text-fg">
-          <span className="flex size-6 items-center justify-center rounded bg-primary text-[10px] font-semibold text-primary-foreground">
-            rE
-          </span>
+          <LogoMark className="size-6" />
           rankER
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-2">
