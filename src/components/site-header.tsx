@@ -24,7 +24,7 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
         <Link to="/" className="flex items-center gap-2.5 font-medium tracking-tight">
-          <LogoMark className="size-8" />
+          <LogoMark className="size-8" animate />
           <Wordmark />
         </Link>
 

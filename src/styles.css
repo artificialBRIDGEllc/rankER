@@ -81,6 +81,54 @@
     margin-left: -0.12em;
   }
 
+  .logo-mark-animate .logo-bar {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: logo-bar-grow var(--motion-slow) var(--ease-out) both;
+  }
+  .logo-mark-animate .logo-bar:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  .logo-mark-animate .logo-bar:nth-child(2) {
+    animation-delay: calc(var(--motion-stagger) * 1.5);
+  }
+  .logo-mark-animate .logo-bar:nth-child(3) {
+    animation-delay: calc(var(--motion-stagger) * 3);
+  }
+  .logo-mark-animate .logo-door {
+    transform-box: fill-box;
+    transform-origin: left 42%;
+    animation: logo-door-open var(--motion-emphasis) var(--ease-smooth-out) both;
+    animation-delay: 0.52s;
+  }
+
+  @keyframes logo-bar-grow {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+  @keyframes logo-door-open {
+    0% {
+      transform: scaleX(0);
+    }
+    74% {
+      transform: scaleX(1.05);
+    }
+    100% {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo-mark-animate .logo-bar,
+    .logo-mark-animate .logo-door {
+      animation: none;
+    }
+  }
+
   ::selection {
     background: color-mix(in oklab, var(--color-fg) 18%, transparent);
   }
