@@ -16,6 +16,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CounselRouteImport } from './routes/counsel'
 import { Route as DomainsRouteImport } from './routes/domains'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as NonprofitRouteImport } from './routes/nonprofit'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
@@ -33,6 +34,7 @@ import { Route as DomainsFqdnRouteImport } from './routes/domains.$fqdn'
 import { Route as DomainsCartRouteImport } from './routes/domains.cart'
 import { Route as NonprofitIndexRouteImport } from './routes/nonprofit.index'
 import { Route as NonprofitIdRouteImport } from './routes/nonprofit.$id'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -67,6 +69,11 @@ const DomainsRoute = DomainsRouteImport.update({
 const InsightsRoute = InsightsRouteImport.update({
   id: '/insights',
   path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NonprofitRoute = NonprofitRouteImport.update({
@@ -154,6 +161,11 @@ const NonprofitIdRoute = NonprofitIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => NonprofitRoute,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -163,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/counsel': typeof CounselRouteWithChildren
   '/domains': typeof DomainsRouteWithChildren
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/nonprofit': typeof NonprofitRouteWithChildren
   '/pricing': typeof PricingRoute
   '/roadmap': typeof RoadmapRoute
@@ -180,11 +193,13 @@ export interface FileRoutesByFullPath {
   '/counsel/': typeof CounselIndexRoute
   '/domains/': typeof DomainsIndexRoute
   '/nonprofit/': typeof NonprofitIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checkout': typeof CheckoutRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/roadmap': typeof RoadmapRoute
   '/audit/$id': typeof AuditIdRoute
@@ -201,6 +216,7 @@ export interface FileRoutesByTo {
   '/counsel': typeof CounselIndexRoute
   '/domains': typeof DomainsIndexRoute
   '/nonprofit': typeof NonprofitIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -211,6 +227,7 @@ export interface FileRoutesById {
   '/counsel': typeof CounselRouteWithChildren
   '/domains': typeof DomainsRouteWithChildren
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/nonprofit': typeof NonprofitRouteWithChildren
   '/pricing': typeof PricingRoute
   '/roadmap': typeof RoadmapRoute
@@ -228,6 +245,7 @@ export interface FileRoutesById {
   '/counsel/': typeof CounselIndexRoute
   '/domains/': typeof DomainsIndexRoute
   '/nonprofit/': typeof NonprofitIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -239,6 +257,7 @@ export interface FileRouteTypes {
     | '/counsel'
     | '/domains'
     | '/insights'
+    | '/login'
     | '/nonprofit'
     | '/pricing'
     | '/roadmap'
@@ -256,11 +275,13 @@ export interface FileRouteTypes {
     | '/counsel/'
     | '/domains/'
     | '/nonprofit/'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/checkout'
     | '/insights'
+    | '/login'
     | '/pricing'
     | '/roadmap'
     | '/audit/$id'
@@ -277,6 +298,7 @@ export interface FileRouteTypes {
     | '/counsel'
     | '/domains'
     | '/nonprofit'
+    | '/api/auth/$'
   id:
     | '__root__'
     | '/'
@@ -286,6 +308,7 @@ export interface FileRouteTypes {
     | '/counsel'
     | '/domains'
     | '/insights'
+    | '/login'
     | '/nonprofit'
     | '/pricing'
     | '/roadmap'
@@ -303,6 +326,7 @@ export interface FileRouteTypes {
     | '/counsel/'
     | '/domains/'
     | '/nonprofit/'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -313,12 +337,14 @@ export interface RootRouteChildren {
   CounselRoute: typeof CounselRouteWithChildren
   DomainsRoute: typeof DomainsRouteWithChildren
   InsightsRoute: typeof InsightsRoute
+  LoginRoute: typeof LoginRoute
   NonprofitRoute: typeof NonprofitRouteWithChildren
   PricingRoute: typeof PricingRoute
   RoadmapRoute: typeof RoadmapRoute
   ComplianceHipaaRoute: typeof ComplianceHipaaRoute
   ComplianceRegulatedRoute: typeof ComplianceRegulatedRoute
   ComplianceStandardRoute: typeof ComplianceStandardRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -370,6 +396,13 @@ declare module '@tanstack/react-router' {
       path: '/insights'
       fullPath: '/insights'
       preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nonprofit': {
@@ -491,6 +524,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NonprofitIdRouteImport
       parentRoute: typeof NonprofitRoute
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -568,12 +608,14 @@ const rootRouteChildren: RootRouteChildren = {
   CounselRoute: CounselRouteWithChildren,
   DomainsRoute: DomainsRouteWithChildren,
   InsightsRoute: InsightsRoute,
+  LoginRoute: LoginRoute,
   NonprofitRoute: NonprofitRouteWithChildren,
   PricingRoute: PricingRoute,
   RoadmapRoute: RoadmapRoute,
   ComplianceHipaaRoute: ComplianceHipaaRoute,
   ComplianceRegulatedRoute: ComplianceRegulatedRoute,
   ComplianceStandardRoute: ComplianceStandardRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

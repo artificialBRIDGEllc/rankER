@@ -3,7 +3,8 @@ import { useState } from "react";
 import { TrackPage } from "@/components/track-page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { AUDIT_STEPS, runAudit } from "@/lib/audit";
+import { AUDIT_STEPS } from "@/lib/audit";
+import { analyzeSite, saveAuditRecord } from "@/lib/fns";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/audit/")({ component: AuditPage });
@@ -28,14 +29,20 @@ function AuditPage() {
     setRunning(true);
     setStep(0);
     track("cta_audit", "/audit", value);
-    for (let i = 0; i < AUDIT_STEPS.length; i++) {
-      setStep(i);
-      await wait(520);
+    const tick = window.setInterval(() => {
+      setStep((s) => Math.min(s + 1, AUDIT_STEPS.length - 1));
+    }, 700);
+    try {
+      const result = await analyzeSite({ data: value });
+      saveAudit(result);
+      void saveAuditRecord({ data: result }).catch(() => undefined);
+      void navigate({ to: "/audit/$id", params: { id: result.id } });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not analyze that site.");
+    } finally {
+      window.clearInterval(tick);
+      setRunning(false);
     }
-    const result = runAudit(value);
-    saveAudit(result);
-    setRunning(false);
-    void navigate({ to: "/audit/$id", params: { id: result.id } });
   }
 
   return (
@@ -43,8 +50,9 @@ function AuditPage() {
       <TrackPage name="view_audit" />
       <h1 className="font-display text-4xl">Free analysis</h1>
       <p className="mt-3 text-muted">
-        Homepage plus two pages. Four-layer scorecard, ranked defects, and the first
-        design tokens. No account required.
+        We fetch the live homepage — title, schema, images, tokens — then score
+        Core Web Vitals risk, SEO, authority, and brand. No account required to run.
+        Sign in to keep history.
       </p>
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
         <label className="block text-sm text-muted" htmlFor="url">
@@ -62,7 +70,7 @@ function AuditPage() {
         />
         {error ? <p className="text-sm text-crit">{error}</p> : null}
         <Button type="submit" size="lg" className="w-full" disabled={running}>
-          {running ? "Running layers…" : "Run analysis"}
+          {running ? "Fetching live page…" : "Run analysis"}
         </Button>
       </form>
       {running ? (
@@ -79,14 +87,10 @@ function AuditPage() {
         </ol>
       ) : (
         <p className="mt-6 text-sm text-subtle">
-          Scores are deterministic for a given host so you can re-run and compare. This demo
-          does not fetch your live pages.
+          Live fetch of the public HTML. Private networks are blocked. If the host
+          refuses the request, we fall back to a heuristic scorecard.
         </p>
       )}
     </main>
   );
-}
-
-function wait(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
 }

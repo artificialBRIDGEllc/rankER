@@ -15,6 +15,7 @@ import {
   type OrgStatus,
 } from "@/lib/nonprofit";
 import { PLANS, type PlanId } from "@/lib/pricing";
+import { saveNonprofitRequest } from "@/lib/fns";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/nonprofit/")({
@@ -92,6 +93,7 @@ function NonprofitPage() {
       typicalPercent: percent,
       typicalMonthly: monthly,
     });
+    void saveNonprofitRequest({ data: { id: rec.id, payload: rec } }).catch(() => undefined);
     void navigate({ to: "/nonprofit/$id", params: { id: rec.id } });
   }
 

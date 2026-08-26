@@ -4,6 +4,8 @@ import { useState } from "react";
 import { LogoMark } from "./logo-mark";
 import { Wordmark } from "./wordmark";
 import { Button, buttonVariants } from "./ui/button";
+import { SignedIn, SignedOut, UserButton } from "@/lib/auth/gates";
+import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { cn } from "@/lib/cn";
 
 const LINKS = [
@@ -48,6 +50,7 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
           <Link to="/counsel" className="text-sm text-muted hover:text-fg">
             Counsel
           </Link>
+          <AuthSlot />
           <Link
             to="/audit"
             className={cn(buttonVariants({ variant: "primary", size: "sm" }), "min-h-11 px-4")}
@@ -94,6 +97,9 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
             >
               Nonprofit rates
             </Link>
+            <div className="px-3 py-3">
+              <AuthSlot />
+            </div>
             <Link
               to="/audit"
               className={cn(buttonVariants({ variant: "primary" }), "mt-2")}
@@ -105,5 +111,24 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
         </div>
       ) : null}
     </header>
+  );
+}
+
+
+function AuthSlot() {
+  const { user, isPending } = useCurrentUserState();
+  if (isPending) {
+    return <div className="size-8 animate-pulse rounded-full bg-surface-2" />;
+  }
+  return user ? (
+    <SignedIn>
+      <UserButton />
+    </SignedIn>
+  ) : (
+    <SignedOut>
+      <Link to="/login" className="text-sm text-muted hover:text-fg">
+        Sign in
+      </Link>
+    </SignedOut>
   );
 }

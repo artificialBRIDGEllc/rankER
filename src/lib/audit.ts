@@ -10,6 +10,7 @@ export type Defect = {
   title: string;
   impact: string;
   fix: string;
+  evidence?: string;
 };
 
 export type Scorecard = {
@@ -30,6 +31,8 @@ export type AuditResult = {
   tokens: Record<string, string>;
   patches: string[];
   lab?: CwvLab;
+  source?: "live" | "heuristic";
+  httpStatus?: number;
 };
 
 function hashString(input: string): number {
@@ -49,7 +52,7 @@ function pick<T>(seed: number, list: T[], offset: number): T {
   return list[(seed + offset) % list.length] as T;
 }
 
-const DEFECT_POOL: Defect[] = [
+export const DEFECT_POOL: Defect[] = [
   {
     id: "D-LCP-01",
     layer: "technical",
@@ -204,6 +207,7 @@ export function runAudit(rawUrl: string): AuditResult {
     tokens,
     patches,
     lab: labFromScore(seed, cwv),
+    source: "heuristic",
   };
 }
 

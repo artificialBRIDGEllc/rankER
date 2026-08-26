@@ -12,6 +12,7 @@ import {
   type SiteBrief,
   type SitePageId,
 } from "@/lib/site-builder";
+import { saveGeneratedSite } from "@/lib/fns";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/build/")({ component: BuildWizard });
@@ -59,6 +60,7 @@ function BuildWizard() {
     }
     const site = generateSite(brief);
     saveSite(site);
+    void saveGeneratedSite({ data: { id: site.id, payload: site } }).catch(() => undefined);
     setRunning(false);
     void navigate({ to: "/build/$id", params: { id: site.id } });
   }

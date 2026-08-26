@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import type { AuditResult, Severity } from "@/lib/audit";
+import { getAuditRecord } from "@/lib/fns";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/audit/$id")({ component: AuditResultPage });
@@ -21,14 +22,29 @@ const SEV: Record<Severity, "crit" | "warn" | "muted"> = {
 function AuditResultPage() {
   const { id } = Route.useParams();
   const audits = useAppStore((s) => s.audits);
+  const saveAudit = useAppStore((s) => s.saveAudit);
   const [hydrated, setHydrated] = useState(() => useAppStore.persist.hasHydrated());
+  const [remote, setRemote] = useState<AuditResult | null>(null);
 
   useEffect(() => {
     if (useAppStore.persist.hasHydrated()) setHydrated(true);
     return useAppStore.persist.onFinishHydration(() => setHydrated(true));
   }, []);
 
-  const audit: AuditResult | undefined = audits.find((a) => a.id === id);
+  useEffect(() => {
+    const local = useAppStore.getState().audits.find((a) => a.id === id);
+    if (local) return;
+    void getAuditRecord({ data: id })
+      .then((row) => {
+        if (row) {
+          saveAudit(row);
+          setRemote(row);
+        }
+      })
+      .catch(() => undefined);
+  }, [id, saveAudit]);
+
+  const audit: AuditResult | undefined = audits.find((a) => a.id === id) ?? remote ?? undefined;
 
   if (!hydrated) {
     return (
@@ -56,6 +72,13 @@ function AuditResultPage() {
       <p className="text-sm text-muted">{audit.host}</p>
       <h1 className="mt-1 font-display text-4xl">Scorecard</h1>
       <p className="mt-2 text-sm text-subtle">{audit.url}</p>
+      {audit.source ? (
+        <Badge tone="muted" className="mt-3">
+          {audit.source === "live"
+            ? `Live fetch${audit.httpStatus ? ` · HTTP ${audit.httpStatus}` : ""}`
+            : "Heuristic fallback"}
+        </Badge>
+      ) : null}
 
       <div className="mt-8 grid gap-6 rounded-2xl border border-border bg-surface p-6 md:grid-cols-2">
         <div>
@@ -84,6 +107,9 @@ function AuditResultPage() {
             </div>
             <h3 className="mt-2 font-medium">{d.title}</h3>
             <p className="mt-1 text-sm text-muted">{d.impact}</p>
+            {d.evidence ? (
+              <p className="mt-2 font-mono text-xs text-accent">{d.evidence}</p>
+            ) : null}
             <p className="mt-2 text-sm text-fg">{d.fix}</p>
           </li>
         ))}

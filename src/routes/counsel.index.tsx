@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { COUNSEL_PRODUCTS, ENGAGEMENT_LIMITS, type CounselSku } from "@/lib/counsel";
 import { cn } from "@/lib/cn";
 import { ONE_TIME_PACKS } from "@/lib/pricing";
+import { saveCounselEngagement } from "@/lib/fns";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/counsel/")({
@@ -56,6 +57,7 @@ function CounselPage() {
       entityType,
       notes: notes.trim(),
     });
+    void saveCounselEngagement({ data: { id: rec.id, payload: rec } }).catch(() => undefined);
     void navigate({ to: "/counsel/$id", params: { id: rec.id } });
   }
 
