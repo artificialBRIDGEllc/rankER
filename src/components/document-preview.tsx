@@ -1,16 +1,21 @@
 import { PACK_DOCS } from "@/lib/documents";
+import { downloadPack } from "@/lib/pack-files";
 import type { PackId } from "@/lib/pricing";
+import { Button } from "./ui/button";
 
 export function DocumentPreview({ pack }: { pack: PackId }) {
   const docs = PACK_DOCS[pack];
   return (
     <section className="mx-auto max-w-6xl px-4 py-16">
       <header className="mb-8 max-w-xl">
-        <h2 className="font-display text-3xl">Document preview</h2>
+        <h2 className="font-display text-3xl">Template excerpts</h2>
         <p className="mt-2 text-muted">
-          Structure you install. Brand tokens applied at generation. Signed versions replace the
-          template banner with a counsel opinion letter.
+          These are templates. Download the full Markdown pack. Do not publish until your own
+          counsel reviews it. rankER does not sign these files.
         </p>
+        <Button className="mt-4" type="button" onClick={() => downloadPack(pack)}>
+          Download full pack (.md)
+        </Button>
       </header>
       <div className="grid gap-4 md:grid-cols-3">
         {docs.map((doc) => (

@@ -48,11 +48,11 @@ function NonprofitConfirm() {
       <h1 className="mt-1 font-display text-4xl">Under review</h1>
       <p className="mt-3 text-muted">
         {rec.orgName} asked for {rec.ask === "100" ? "a $0 scholarship" : `${rec.ask}% off`} on{" "}
-        {plan.name}. Typical award for this profile is {rec.typicalPercent}%
+        {plan.name}. An illustrative formula for this profile is {rec.typicalPercent}%
         {rec.typicalPercent === 100
           ? " ($0 / month)."
           : ` ($${rec.typicalMonthly.toFixed(2)}/mo).`}{" "}
-        Written decision in five business days.
+        The request is stored. There is no five-day SLA. A human has to approve it.
       </p>
       <dl className="mt-8 space-y-3 rounded-2xl border border-border bg-surface p-6 text-sm">
         <Row label="Status" value={ORG_STATUS[rec.status]} />
@@ -62,8 +62,8 @@ function NonprofitConfirm() {
       </dl>
       {askedZero ? (
         <p className="mt-6 text-sm text-muted">
-          $0 awards are reserved for the smallest budgets and underserved missions. If we cannot
-          scholarship the full plan, we still offer the typical percent above.
+          $0 awards, if granted, are reserved for the smallest budgets and underserved missions.
+          The formula above is not a promise.
         </p>
       ) : null}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">

@@ -1,7 +1,7 @@
 export const SITE = {
   name: "rankER",
   mark: "rE",
-  tagline: "Rank. Unify. Comply.",
+  tagline: "Fetch. Score. Template.",
   domain: "ranker.theartificialbridge.com",
   url: "https://ranker.theartificialbridge.com",
   org: "artificialBRIDGE",

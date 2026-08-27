@@ -71,7 +71,7 @@ function BuildWizard() {
       <h1 className="mt-1 font-display text-4xl">Build a site</h1>
       <p className="mt-3 text-muted">
         No existing URL required. Choose the industry, name the practice, pick pages.
-        rankER generates a brand-locked site you can preview, copy, and take to Rebuild & Command.
+        rankER generates an in-app preview you can copy. We do not host or register the public domain.
       </p>
 
       <form onSubmit={onSubmit} className="mt-10 space-y-8">

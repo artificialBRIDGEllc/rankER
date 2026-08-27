@@ -3,7 +3,6 @@ import { authMiddleware } from "@/lib/auth/middleware";
 import { getSql } from "@/lib/db";
 import { AnalyzeError, analyzeUrl } from "@/lib/analyze";
 import { SITE } from "@/lib/brand";
-import { COUNSEL_PRODUCTS } from "@/lib/counsel";
 import { ONE_TIME_PACKS, PLANS } from "@/lib/pricing";
 import type { AuditResult } from "@/lib/audit";
 
@@ -70,7 +69,6 @@ type CheckoutInput = {
   sku: string;
   label: string;
   amount: number;
-  domainCart?: { fqdn: string; price: number; years: number; privacy: boolean }[];
 };
 
 export const createCheckout = createServerFn({ method: "POST" })
@@ -87,8 +85,11 @@ export const createCheckout = createServerFn({ method: "POST" })
     if (data.kind === "pack" && !(data.sku in ONE_TIME_PACKS)) {
       throw new Error("Unknown pack.");
     }
-    if (data.kind === "counsel" && !(data.sku in COUNSEL_PRODUCTS)) {
-      throw new Error("Unknown counsel product.");
+    if (data.kind === "counsel") {
+      throw new Error("Review requests are stored on Counsel Desk. We do not sell a signed letter.");
+    }
+    if (data.kind === "domain") {
+      throw new Error("We are not a registrar. Domain checkout is not offered.");
     }
 
     const id = `ord_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -117,13 +118,6 @@ export const createCheckout = createServerFn({ method: "POST" })
         ${payload}::jsonb
       )
     `;
-
-    if (data.kind === "domain" && data.domainCart?.length) {
-      await sql`
-        insert into domain_orders (id, user_id, payload)
-        values (${id}, ${context.userId}, ${payload}::jsonb)
-      `;
-    }
 
     return {
       orderId: id,
@@ -213,3 +207,46 @@ async function startStripeSession(args: {
   }
   return { url: json.url, sessionId: json.id };
 }
+
+
+export type RdapRow = {
+  fqdn: string;
+  tld: string;
+  status: "registered" | "not_listed" | "error";
+  listPrice: number;
+  note: string;
+};
+
+export const lookupDomains = createServerFn({ method: "POST" })
+  .validator((query: string) => String(query ?? "").trim())
+  .handler(async ({ data: query }): Promise<RdapRow[]> => {
+    const { parseQuery, TLDS } = await import("@/lib/domains");
+    const { sld, tldHint } = parseQuery(query);
+    if (sld.length < 2) return [];
+    const ordered = [...TLDS].sort((a, b) => {
+      if (a.id === tldHint) return -1;
+      if (b.id === tldHint) return 1;
+      return 0;
+    });
+    return Promise.all(
+      ordered.map(async (tld) => {
+        const fqdn = `${sld}.${tld.id}`;
+        try {
+          const res = await fetch(`https://rdap.org/domain/${encodeURIComponent(fqdn)}`, {
+            method: "GET",
+            signal: AbortSignal.timeout(5000),
+            headers: { accept: "application/rdap+json, application/json" },
+          });
+          if (res.status === 404) {
+            return { fqdn, tld: tld.id, status: "not_listed" as const, listPrice: tld.price, note: "Not in RDAP. Not a registration." };
+          }
+          if (!res.ok) {
+            return { fqdn, tld: tld.id, status: "error" as const, listPrice: tld.price, note: `RDAP HTTP ${res.status}.` };
+          }
+          return { fqdn, tld: tld.id, status: "registered" as const, listPrice: tld.price, note: "RDAP has a record. Treat as registered." };
+        } catch {
+          return { fqdn, tld: tld.id, status: "error" as const, listPrice: tld.price, note: "RDAP request failed." };
+        }
+      }),
+    );
+  });

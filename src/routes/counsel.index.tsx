@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { COUNSEL_PRODUCTS, ENGAGEMENT_LIMITS, type CounselSku } from "@/lib/counsel";
 import { cn } from "@/lib/cn";
-import { ONE_TIME_PACKS } from "@/lib/pricing";
 import { saveCounselEngagement } from "@/lib/fns";
 import { useAppStore } from "@/lib/store";
 
@@ -14,11 +13,11 @@ export const Route = createFileRoute("/counsel/")({
   component: CounselPage,
   head: () => ({
     meta: [
-      { title: "Counsel Desk — signed website disclosures · rankER" },
+      { title: "Counsel Desk — request a review · rankER" },
       {
         name: "description",
         content:
-          "Most buyers do not have a lawyer. rankER Counsel Desk is a limited engagement with licensed reviewers who sign the website pack. Not a 'ask your legal team' disclaimer.",
+          "Submit a website-disclosure review request. rankER stores it. We do not employ counsel and do not issue a signed letter.",
       },
     ],
   }),
@@ -39,9 +38,6 @@ function CounselPage() {
   const [error, setError] = useState<string | null>(null);
 
   const product = COUNSEL_PRODUCTS[sku];
-  const packPrice =
-    product.pack && sku !== "retainer" ? ONE_TIME_PACKS[product.pack].price : 0;
-  const total = product.price + packPrice;
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -67,10 +63,10 @@ function CounselPage() {
       <JsonLd
         data={{
           "@context": "https://schema.org",
-          "@type": "ProfessionalService",
+          "@type": "WebPage",
           name: "rankER Counsel Desk",
           description:
-            "Limited attorney engagement to sign website disclosure packs for organizations without in-house counsel.",
+            "A request form that stores a website-disclosure review. Not an attorney-client relationship. No signed letter is issued.",
         }}
       />
 
@@ -86,13 +82,13 @@ function CounselPage() {
         <div className="relative mx-auto max-w-3xl px-4 py-20">
           <p className="text-xs tracking-[0.18em] text-accent uppercase">Counsel Desk</p>
           <h1 className="mt-3 font-display text-4xl sm:text-5xl">
-            Signed by counsel.
-            <span className="mt-1 block italic text-accent">Not “have your lawyer look at it.”</span>
+            Request a review.
+            <span className="mt-1 block italic text-accent">We do not sign the pack.</span>
           </h1>
           <p className="mt-4 max-w-xl text-muted">
-            Most clinics, agencies, and nonprofits buying these packs do not have a legal team and
-            cannot hire one yet. We partner with licensed reviewers under a limited engagement so
-            the website disclosures go live with a signature — not a homework assignment.
+            This form stores a request on your account. We do not partner with reviewers in this
+            product, we do not issue a signed letter, and we do not put the templates live for you.
+            Fees below are illustrative for a future engagement — they are not for sale today.
           </p>
         </div>
       </section>
@@ -109,7 +105,7 @@ function CounselPage() {
             <p className="text-sm text-muted">{p.name}</p>
             <p className="mt-1 font-display text-2xl">
               ${p.price.toLocaleString()}
-              {p.id === "retainer" ? <span className="text-base font-sans text-subtle">/mo</span> : null}
+              <span className="text-base font-sans text-subtle"> illustrative</span>
             </p>
             <p className="mt-2 text-sm text-muted">{p.description}</p>
             <p className="mt-3 text-xs text-subtle">{p.days}</p>
@@ -119,13 +115,13 @@ function CounselPage() {
 
       <section className="border-y border-border bg-surface py-14">
         <div className="mx-auto max-w-6xl px-4">
-          <h2 className="font-display text-3xl">How the partnership works</h2>
+          <h2 className="font-display text-3xl">What this form actually does</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-4">
             {[
-              ["01", "Limited engagement", "You retain Counsel Desk for the website pack only. Engagement letter is explicit about scope."],
-              ["02", "Conflicts + jurisdiction", "Reviewer must be licensed for the state you publish in. Multi-state flags extra review."],
-              ["03", "Redline the pack", "They start from rankER drafts — NPP, BAA starter, CMS lines — not a blank page."],
-              ["04", "Signed opinion", "PDF + change log. Template banner is replaced with the signature block and date."],
+              ["01", "You write the request", "Legal name, jurisdiction, and what must be true on the live site."],
+              ["02", "We store it", "Signed-in accounts persist the row. No reviewer is assigned."],
+              ["03", "Nothing is signed", "Template banners stay templates. No PDF opinion letter is generated."],
+              ["04", "Your own counsel", "Have a lawyer you hire review the Markdown before you publish."],
             ].map(([n, t, d]) => (
               <article key={n} className="rounded-2xl border border-border bg-bg p-6">
                 <p className="font-mono text-xs text-accent">{n}</p>
@@ -138,11 +134,9 @@ function CounselPage() {
       </section>
 
       <section className="mx-auto max-w-2xl px-4 py-16">
-        <h2 className="font-display text-3xl">Open an engagement</h2>
+        <h2 className="font-display text-3xl">Store a request</h2>
         <p className="mt-2 text-sm text-muted">
-          {sku === "retainer"
-            ? `Retainer ${product.price}/mo.`
-            : `Pack ${packPrice.toLocaleString()} + counsel ${product.price.toLocaleString()} = $${total.toLocaleString()} one-time.`}
+          Free. {product.name} is recorded as the type you asked about. No card is charged.
         </p>
         <form onSubmit={submit} className="mt-8 space-y-5">
           <div>
@@ -190,7 +184,7 @@ function CounselPage() {
             </div>
             <div>
               <label htmlFor="sku" className="mb-1.5 block text-sm text-muted">
-                Engagement
+                What you would want reviewed
               </label>
               <select
                 id="sku"
@@ -220,7 +214,7 @@ function CounselPage() {
           </div>
           {error ? <p className="text-sm text-crit">{error}</p> : null}
           <Button type="submit" size="lg" className="w-full">
-            Submit engagement
+            Store request
           </Button>
         </form>
         <ul className="mt-10 space-y-2 text-sm text-muted">
@@ -229,7 +223,7 @@ function CounselPage() {
           ))}
         </ul>
         <p className="mt-6 text-sm text-subtle">
-          Nonprofits may request a counsel discount after opening an engagement.{" "}
+          Nonprofits can also store a discount request.{" "}
           <Link to="/nonprofit" className="underline">
             Nonprofit rates
           </Link>

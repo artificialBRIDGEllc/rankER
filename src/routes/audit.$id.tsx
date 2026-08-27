@@ -9,6 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import type { AuditResult, Severity } from "@/lib/audit";
 import { getAuditRecord } from "@/lib/fns";
+import { downloadCssTokens } from "@/lib/pack-files";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/audit/$id")({ component: AuditResultPage });
@@ -84,10 +85,10 @@ function AuditResultPage() {
         <div>
           <p className="text-sm text-muted">Overall</p>
           <p className="font-display text-6xl tabular-nums">{audit.scorecard.overall}</p>
-          <p className="mt-1 text-sm text-subtle">Top 1% threshold is 92 with zero critical CWV fails.</p>
+          <p className="mt-1 text-sm text-subtle">0–100 HTML model. Not a Google ranking percentile.</p>
         </div>
         <div className="space-y-4">
-          <ScoreMeter label="Core Web Vitals" value={audit.scorecard.cwv} />
+          <ScoreMeter label="HTML vitals risk" value={audit.scorecard.cwv} />
           <ScoreMeter label="SEO foundation" value={audit.scorecard.seo} />
           <ScoreMeter label="Content authority" value={audit.scorecard.authority} />
           <ScoreMeter label="Brand unity" value={audit.scorecard.brand} />
@@ -95,6 +96,21 @@ function AuditResultPage() {
       </div>
 
       {audit.lab ? <CwvLabPanel lab={audit.lab} /> : null}
+
+      {audit.pages?.length ? (
+        <section className="mt-8">
+          <h2 className="font-display text-2xl">Pages fetched</h2>
+          <ul className="mt-4 space-y-2 text-sm">
+            {audit.pages.map((p) => (
+              <li key={p.url} className="rounded-xl border border-border bg-surface px-4 py-3">
+                <span className="font-mono text-xs text-accent">HTTP {p.status}</span>{" "}
+                <span className="text-fg">{p.url}</span>
+                <span className="block text-subtle">{p.title ?? "No title"} · {(p.bytes / 1024).toFixed(0)} KB</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <h2 className="mt-12 font-display text-2xl">Ranked defects</h2>
       <ul className="mt-4 space-y-3">
@@ -115,7 +131,15 @@ function AuditResultPage() {
         ))}
       </ul>
 
-      <h2 className="mt-12 font-display text-2xl">Design tokens</h2>
+      <h2 className="mt-12 font-display text-2xl">Suggested tokens</h2>
+      <p className="mt-2 text-sm text-muted">Suggestions from this fetch. Not your brand system until you adopt them.</p>
+      <button
+        type="button"
+        className="mt-3 text-sm underline"
+        onClick={() => downloadCssTokens(audit.tokens, audit.host)}
+      >
+        Download CSS file
+      </button>
       <pre className="mt-4 overflow-x-auto rounded-2xl border border-border bg-surface p-5 font-mono text-xs text-muted">
         {Object.entries(audit.tokens)
           .map(([k, v]) => `${k}: ${v};`)
@@ -135,13 +159,13 @@ function AuditResultPage() {
 
       <div className="mt-10 flex flex-col gap-3 sm:flex-row">
         <Link to="/counsel" className={cn(buttonVariants())}>
-          Get counsel sign-off
+          Request a review
         </Link>
         <Link to="/compliance/hipaa" className={cn(buttonVariants({ variant: "secondary" }))}>
           HIPAA pack
         </Link>
         <Link to="/pricing" className={cn(buttonVariants({ variant: "ghost" }))}>
-          Upgrade monitoring
+          View plans
         </Link>
       </div>
     </main>

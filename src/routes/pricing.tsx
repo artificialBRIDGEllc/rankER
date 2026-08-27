@@ -11,11 +11,10 @@ function PricingPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-14">
       <header className="mx-auto mb-12 max-w-2xl text-center">
-        <h1 className="font-display text-4xl">Pricing that scales with you</h1>
+        <h1 className="font-display text-4xl">Pricing</h1>
         <p className="mt-3 text-muted">
-          Start free. Analyze an existing URL or build a site from a blank brief.
-          Upgrade for weekly cadence, continuous monitoring, or full rebuild power.
-          Compliance packs are one-time and available to everyone.
+          Free analysis fetches public HTML. Paid tiers save history and unlock template
+          downloads. We do not run weekly jobs, register domains, or sign legal documents.
         </p>
       </header>
 
@@ -28,7 +27,7 @@ function PricingPage() {
               plan.popular ? "border-accent/40 bg-surface" : "border-border bg-surface",
             )}
           >
-            {plan.popular ? <p className="mb-2 text-xs font-medium text-accent">Most chosen</p> : null}
+            {plan.popular ? <p className="mb-2 text-xs font-medium text-accent">Includes template download</p> : null}
             <p className="text-sm text-muted">{plan.name}</p>
             <p className="mt-1 font-display text-3xl">
               {plan.priceMonthly === 0 ? "$0" : `$${plan.priceMonthly}`}
@@ -53,17 +52,17 @@ function PricingPage() {
                 "mt-6 w-full",
               )}
             >
-              {plan.id === "free" ? "Start free" : plan.id === "tier3" ? "Start rebuild" : "Choose plan"}
+              {plan.id === "free" ? "Start free" : "Choose plan"}
             </Link>
           </article>
         ))}
       </div>
 
       <div className="mt-10 rounded-2xl border border-ok/35 bg-surface p-6 text-center">
-        <h2 className="font-display text-2xl">No lawyer on staff?</h2>
+        <h2 className="font-display text-2xl">Need a human reviewer?</h2>
         <p className="mx-auto mt-2 max-w-lg text-sm text-muted">
-          Counsel Desk is a limited engagement. Licensed reviewers sign the website pack so you
-          are not told to “have your legal team check” a document you cannot staff.
+          Submit a review request. rankER stores it on your account. We do not employ counsel
+          and no signed letter is generated automatically.
         </p>
         <Link to="/counsel" className={cn(buttonVariants(), "mt-5 inline-flex")}>
           Open Counsel Desk
@@ -73,8 +72,8 @@ function PricingPage() {
       <div className="mt-10 rounded-2xl border border-border bg-surface p-6 text-center">
         <h2 className="font-display text-2xl">Nonprofit?</h2>
         <p className="mx-auto mt-2 max-w-lg text-sm text-muted">
-          501(c)(3) and public-benefit orgs can request 50–80% off, or a scholarship to $0.
-          Written decision in five business days.
+          501(c)(3) and similar orgs can request a discount. The request is stored. A human
+          has to approve it — there is no automatic $0 plan.
         </p>
         <Link to="/nonprofit" className={cn(buttonVariants(), "mt-5 inline-flex")}>
           Request a nonprofit rate
@@ -84,7 +83,7 @@ function PricingPage() {
       <div className="mt-10 rounded-2xl border border-border bg-surface p-6 text-center">
         <h2 className="font-display text-2xl">No site yet?</h2>
         <p className="mx-auto mt-2 max-w-lg text-sm text-muted">
-          Build from a blank brief. Healthcare, professional, local, or software — tokens, pages, and schema included.
+          Generate an in-app preview from a brief. You still have to deploy it yourself.
         </p>
         <Link to="/build" className={cn(buttonVariants(), "mt-5 inline-flex")}>
           Build from scratch
@@ -92,10 +91,10 @@ function PricingPage() {
       </div>
 
       <h2 id="domains" className="mt-20 text-center font-display text-2xl">
-        Domain reseller
+        Domain RDAP lookup
       </h2>
       <p className="mx-auto mt-2 max-w-xl text-center text-muted">
-        rankER resells registrations. WHOIS privacy, DNS, SSL, and email forwarding included. First-year list price:
+        Public RDAP records. We do not register names. Figures below are typical retail, not a quote from us:
       </p>
       <div className="mt-8 overflow-x-auto rounded-2xl border border-border">
         <table className="w-full min-w-[32rem] text-left text-sm">
@@ -121,15 +120,15 @@ function PricingPage() {
       </div>
       <div className="mt-6 text-center">
         <Link to="/domains" className={cn(buttonVariants({ variant: "secondary" }), "inline-flex")}>
-          Search availability
+          Look up RDAP
         </Link>
       </div>
 
       <h2 id="packs" className="mt-20 text-center font-display text-2xl">
-        One-time compliance packs
+        One-time template packs
       </h2>
       <p className="mx-auto mt-2 max-w-xl text-center text-muted">
-        Generated with brand tokens. HIPAA and regulated packs run under elevated governance.
+        Markdown you can download on the pack page. Not legal advice.
       </p>
       <div className="mt-8 grid gap-4 md:grid-cols-3">
         {Object.values(ONE_TIME_PACKS).map((pack) => (

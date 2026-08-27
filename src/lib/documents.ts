@@ -19,7 +19,7 @@ export const PACK_DOCS: Record<PackId, DocPreview[]> = {
       id: "terms",
       title: "Terms of Service",
       kicker: "Limitation of liability",
-      body: "The service is provided as-is. We cap liability at fees paid in the prior twelve months. You retain ownership of your content; you grant us a limited license to host and display it. These terms are templates until counsel signs the pack.",
+      body: "The service is provided as-is. We cap liability at fees paid in the prior twelve months. You retain ownership of your content; you grant us a limited license to host and display it. These terms are a template until your own counsel adopts them.",
     },
     {
       id: "a11y",

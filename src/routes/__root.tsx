@@ -6,9 +6,9 @@ import { SiteHeader } from "@/components/site-header";
 import appCss from "../styles.css?url";
 import { SITE } from "@/lib/brand";
 
-const APP_NAME = "rankER — Rank. Unify. Comply.";
+const APP_NAME = "rankER — Fetch. Score. Template.";
 const DESCRIPTION =
-  "Elite website ranking, brand unification, HIPAA disclosures, from-scratch builds, and domain reseller. Free analysis. Governed copilot.";
+  "Live HTML analysis of public pages. Downloadable disclosure templates. In-app site preview. RDAP lookup. Not a registrar. Not legal advice.";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -20,7 +20,7 @@ export const Route = createRootRoute({
       { name: "robots", content: "index,follow" },
       { name: "author", content: "rankER" },
       { name: "theme-color", content: "#070B12" },
-      { name: "keywords", content: "SEO, Core Web Vitals, HIPAA website, brand system, domain registrar, Medicare marketing" },
+      { name: "keywords", content: "website HTML audit, disclosure templates, RDAP lookup, HIPAA template" },
     ],
     links: [
       { rel: "canonical", href: SITE.url },

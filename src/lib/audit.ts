@@ -1,5 +1,5 @@
 import type { CwvLab } from "./cwv";
-import { labFromScore } from "./cwv";
+import { htmlModelFromSignals } from "./cwv";
 
 export type Severity = "critical" | "high" | "medium";
 
@@ -21,6 +21,13 @@ export type Scorecard = {
   brand: number;
 };
 
+export type FetchedPage = {
+  url: string;
+  status: number;
+  title: string | null;
+  bytes: number;
+};
+
 export type AuditResult = {
   id: string;
   url: string;
@@ -33,6 +40,7 @@ export type AuditResult = {
   lab?: CwvLab;
   source?: "live" | "heuristic";
   httpStatus?: number;
+  pages?: FetchedPage[];
 };
 
 function hashString(input: string): number {
@@ -58,15 +66,15 @@ export const DEFECT_POOL: Defect[] = [
     layer: "technical",
     severity: "critical",
     title: "LCP image missing fetchpriority and dimensions",
-    impact: "LCP likely above 2.5s on mobile — a Core Web Vitals gate failure.",
+    impact: "HTML signals a likely LCP risk. This is not a Chrome lab measurement.",
     fix: "Add width/height, convert to AVIF/WebP, set fetchpriority=high, and preload the LCP asset.",
   },
   {
     id: "D-INP-02",
     layer: "technical",
     severity: "high",
-    title: "Long tasks on the main thread",
-    impact: "INP risk above 200ms. Tie-breaker ranking signal in competitive SERPs.",
+    title: "Heavy script payload on the document",
+    impact: "Many script tags or a large HTML document increase INP risk. Not a measured INP.",
     fix: "Defer non-critical JS, split long tasks, and delay third-party widgets until idle.",
   },
   {
@@ -74,7 +82,7 @@ export const DEFECT_POOL: Defect[] = [
     layer: "technical",
     severity: "high",
     title: "Unreserved space for late-loading media",
-    impact: "CLS above 0.1 from images or ads without dimensions.",
+    impact: "Images without dimensions are a CLS risk. Not a measured CLS.",
     fix: "Reserve aspect-ratio boxes and set explicit dimensions on every media node.",
   },
   {
@@ -82,23 +90,23 @@ export const DEFECT_POOL: Defect[] = [
     layer: "content",
     severity: "medium",
     title: "Missing Organization + WebSite JSON-LD",
-    impact: "Weaker entity graph and fewer rich-result eligibility signals.",
+    impact: "No application/ld+json on the fetched documents.",
     fix: "Inject a valid JSON-LD graph with sameAs, logo, and SearchAction.",
   },
   {
     id: "D-H1-05",
     layer: "content",
     severity: "high",
-    title: "Title and H1 do not match primary intent",
-    impact: "Lower CTR and weaker information-gain alignment vs. top-3 competitors.",
+    title: "Title and H1 do not match a single intent",
+    impact: "Missing title, or H1 count is not 1, on a fetched page.",
     fix: "Rewrite title (first 60 chars) and H1 to the primary query; keep unique per page.",
   },
   {
     id: "D-EEAT-06",
     layer: "content",
     severity: "high",
-    title: "Thin E-E-A-T: no verifiable author or about signals",
-    impact: "Pages struggle in YMYL / healthcare / finance SERPs and AI Overviews.",
+    title: "Thin E-E-A-T: no verifiable author signal",
+    impact: "No rel=author or itemprop=author on the fetched HTML.",
     fix: "Add author credentials, about identity, and outbound citations to authority sources.",
   },
   {
@@ -106,7 +114,7 @@ export const DEFECT_POOL: Defect[] = [
     layer: "content",
     severity: "medium",
     title: "No FAQ or answer-block structure",
-    impact: "Low AI Overview citation chance despite ranking potential.",
+    impact: "No FAQ copy or FAQPage schema in the fetch.",
     fix: "Add concise answer blocks plus FAQPage schema on high-intent URLs.",
   },
   {
@@ -114,7 +122,7 @@ export const DEFECT_POOL: Defect[] = [
     layer: "brand",
     severity: "critical",
     title: "Hard-coded color values instead of a token system",
-    impact: "Brand score below 8. Visual drift across pages is guaranteed as the site grows.",
+    impact: "Many hex values in HTML. Brand will drift as pages are added.",
     fix: "Introduce CSS custom properties for color, type, space, and radius. Replace ad-hoc hex.",
   },
   {
@@ -122,15 +130,15 @@ export const DEFECT_POOL: Defect[] = [
     layer: "brand",
     severity: "high",
     title: "Inconsistent type scale and line-height",
-    impact: "Hierarchy reads as assembled, not designed. Weakens trust on conversion pages.",
+    impact: "Cannot be proven from HTML fetch alone; flagged when heading structure is irregular.",
     fix: "Lock a modular type scale and apply it to headings, body, and captions.",
   },
   {
     id: "D-VOICE-10",
     layer: "brand",
     severity: "medium",
-    title: "Voice drift between homepage, product, and footer",
-    impact: "Messaging architecture is fragmented; value prop is restated differently on each surface.",
+    title: "Voice still needs a human pass",
+    impact: "Fetch cannot score brand voice. Treat this as a review item, not a measured defect.",
     fix: "Write a one-line value prop and reuse it with the same hierarchy on every major page.",
   },
   {
@@ -138,16 +146,16 @@ export const DEFECT_POOL: Defect[] = [
     layer: "brand",
     severity: "high",
     title: "Primary CTA styles diverge across templates",
-    impact: "Component library cohesion fails. Conversion path feels unowned.",
-    fix: "One button system: radius, padding, hover, and focus from tokens. No one-off variants.",
+    impact: "Not fully provable from HTML. Raised when multiple distinct button classes appear.",
+    fix: "One button system: radius, padding, hover, and focus from tokens.",
   },
   {
     id: "D-A11Y-12",
     layer: "brand",
     severity: "medium",
-    title: "Contrast and focus states do not match the brand layer",
-    impact: "WCAG gaps plus a brand that looks unfinished on keyboard navigation.",
-    fix: "AA contrast on text and a focus ring using the accent token.",
+    title: "Missing lang or viewport",
+    impact: "html[lang] or viewport meta missing on a fetched document.",
+    fix: "Set lang on <html> and a viewport meta. AA contrast still needs a human check.",
   },
 ];
 
@@ -176,7 +184,7 @@ export function runAudit(rawUrl: string): AuditResult {
   const defects: Defect[] = [];
   for (let i = 0; i < count; i++) {
     const d = pick(seed, DEFECT_POOL, i * 3);
-    if (!defects.find((x) => x.id === d.id)) defects.push(d);
+    if (!defects.find((x) => x.id === d.id)) defects.push({ ...d, evidence: "Heuristic fallback — live fetch failed." });
   }
 
   const hue = seed % 360;
@@ -189,14 +197,6 @@ export function runAudit(rawUrl: string): AuditResult {
     "--radius-md": "0.5rem",
   };
 
-  const patches = [
-    "Inject :root design tokens and replace hard-coded colors.",
-    "Preload LCP image with fetchpriority=high and explicit dimensions.",
-    "Add Organization + WebSite JSON-LD in the document head.",
-    "Unify primary CTA component (padding, radius, hover, focus).",
-    "Rewrite title + H1 to match primary search intent.",
-  ];
-
   return {
     id: `aud_${seed.toString(16)}`,
     url: withProto,
@@ -205,17 +205,22 @@ export function runAudit(rawUrl: string): AuditResult {
     scorecard: { overall, cwv, seo, authority, brand },
     defects,
     tokens,
-    patches,
-    lab: labFromScore(seed, cwv),
+    patches: defects.slice(0, 5).map((d) => d.fix),
+    lab: htmlModelFromSignals({
+      ttfbMs: null,
+      htmlBytes: 0,
+      scripts: 0,
+      images: 0,
+      imagesMissingDims: 0,
+    }),
     source: "heuristic",
   };
 }
 
 export const AUDIT_STEPS = [
-  "Lab capture — LCP, INP, CLS on mobile",
-  "Technical foundation — crawl, schema, mobile parity",
-  "On-page and content authority — intent, information gain, E-E-A-T",
-  "Brand unification — color, type, voice, components",
-  "Competitive gap — top-ranking pages vs. your surfaces",
-  "Implementation artifacts — tokens, schema, patches",
+  "Fetch homepage HTML and TTFB",
+  "Follow two internal links on the same host",
+  "Read title, schema, images, and tokens",
+  "Score HTML vitals risk, SEO, authority, brand",
+  "List defects with evidence from the fetch",
 ] as const;

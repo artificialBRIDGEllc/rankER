@@ -153,7 +153,7 @@ export function generateSite(brief: SiteBrief): GeneratedSite {
         title: "Home",
         path: "/",
         headline: tagline,
-        body: `${name} serves ${city}. The site is built to rank, convert, and stay on-brand — one offer, one proof path, one next step.`,
+        body: `${name} serves ${city}. This is generated preview copy — one offer, one next step. Replace it before you publish.`,
         bullets: industry.services.slice(0, 3),
         cta: "Book a conversation",
       };
@@ -187,7 +187,7 @@ export function generateSite(brief: SiteBrief): GeneratedSite {
         path: "/contact",
         headline: "Start here",
         body: `Reach ${name} in ${city}. One form, one confirmation, no dark patterns.`,
-        bullets: ["Response within one business day", "No shared inboxes as a product", city],
+        bullets: ["Replace this response-time claim", "No shared inboxes as a product", city],
         cta: "Send a message",
       };
     }

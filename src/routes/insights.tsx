@@ -8,10 +8,10 @@ export const Route = createFileRoute("/insights")({
   component: InsightsPage,
   head: () => ({
     meta: [
-      { title: "Conversion analytics — rankER" },
+      { title: "Local funnel log — rankER" },
       {
         name: "description",
-        content: "Funnel counts for analysis, HIPAA, counsel, and checkout. Measured on this property.",
+        content: "Counts of analysis, HIPAA, counsel, and checkout events stored in this browser.",
       },
     ],
   }),
@@ -30,11 +30,10 @@ function InsightsPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-14">
       <TrackPage name="view_insights" />
-      <h1 className="font-display text-4xl">Conversion analytics</h1>
+      <h1 className="font-display text-4xl">Local funnel log</h1>
       <p className="mt-3 text-muted">
-        Local event log for this browser. Production wires the same names to a warehouse. We
-        measure free analysis, HIPAA, Counsel Desk, and checkout — packaging decisions are not
-        guessed.
+        Event counts in this browser only. We do not have a warehouse wired. Names match the
+        buttons you already clicked — analysis, HIPAA, Counsel Desk, and checkout.
       </p>
       <div className="mt-10 space-y-4">
         {FUNNEL.map((f) => {

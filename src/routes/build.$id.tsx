@@ -77,10 +77,10 @@ function BuildResultPage() {
           </Link>
         )}
         <Link to="/checkout" search={{ plan: "tier3" }} className={cn(buttonVariants({ variant: "secondary" }))}>
-          Rebuild & Command
+          Portfolio plan
         </Link>
         <Link to="/domains" className={cn(buttonVariants({ variant: "ghost" }))}>
-          Register a domain
+          Look up a name (RDAP)
         </Link>
         <Link to="/build" className={cn(buttonVariants({ variant: "ghost" }))}>
           New brief

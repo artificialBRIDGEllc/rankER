@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ICANN_NOTICE } from "@/lib/domains";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 import { COUNSEL_PRODUCTS, type CounselSku } from "@/lib/counsel";
 import { ONE_TIME_PACKS, PLANS, type PackId, type PlanId } from "@/lib/pricing";
 import { createCheckout } from "@/lib/fns";
@@ -29,67 +29,41 @@ function CheckoutPage() {
   const { user, isPending } = useCurrentUserState();
   const addPurchase = useAppStore((s) => s.addPurchase);
   const track = useAppStore((s) => s.track);
-  const cart = useAppStore((s) => s.domainCart);
-  const registerCart = useAppStore((s) => s.registerCart);
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState<{ id: string; domains: string[]; preview: boolean } | null>(
-    paid ? { id: paid, domains: [], preview: false } : null,
+  const [done, setDone] = useState<{ id: string; preview: boolean } | null>(
+    paid ? { id: paid, preview: false } : null,
   );
   const [err, setErr] = useState<string | null>(null);
 
   const packItem = pack ? ONE_TIME_PACKS[pack as PackId] : null;
   const planItem = plan ? PLANS[plan as PlanId] : null;
   const counselItem = counsel ? COUNSEL_PRODUCTS[counsel as CounselSku] : null;
-  const domainMode = domain === "cart" || (!packItem && !planItem && !counselItem && cart.length > 0);
-  const domainTotal = cart.reduce((sum, i) => sum + i.price, 0);
-  const label = domainMode
-    ? cart.map((c) => c.fqdn).join(", ") || "Domains"
-    : [packItem?.name, counselItem?.name, planItem?.name].filter(Boolean).join(" + ") || "Select a product";
-  const amount = domainMode
-    ? domainTotal
-    : (packItem?.price ?? 0) + (counselItem?.price ?? 0) + (planItem?.priceMonthly ?? 0);
-  const kind = domainMode ? "domain" : counselItem && !packItem && !planItem ? "counsel" : packItem ? "pack" : "plan";
+  const domainMode = domain === "cart";
+  const label =
+    [packItem?.name, planItem?.name].filter(Boolean).join(" + ") || "Select a product";
+  const amount = (packItem?.price ?? 0) + (planItem?.priceMonthly ?? 0);
+  const kind = packItem ? "pack" : "plan";
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (domainMode && !cart.length) {
-      setErr("Your domain cart is empty.");
-      return;
-    }
-    if (!domainMode && !packItem && !planItem && !counselItem) {
-      setErr("Choose a plan, pack, domain, or counsel engagement.");
+    if (!packItem && !planItem) {
+      setErr("Choose a plan or template pack.");
       return;
     }
     setErr(null);
     setBusy(true);
     try {
-      const sku = domainMode
-        ? cart.map((c) => c.fqdn).join(",")
-        : ((counselItem?.id ?? packItem?.id ?? planItem?.id) as string);
+      const sku = (packItem?.id ?? planItem?.id) as string;
       const res = await createCheckout({
-        data: {
-          kind,
-          sku,
-          label,
-          amount,
-          domainCart: domainMode
-            ? cart.map((c) => ({
-                fqdn: c.fqdn,
-                price: c.price,
-                years: c.years,
-                privacy: c.privacy,
-              }))
-            : undefined,
-        },
+        data: { kind, sku, label, amount },
       });
       addPurchase({ kind, sku, label, amount });
-      const registered = domainMode ? registerCart(res.orderId) : [];
       track("checkout_complete", "/checkout", sku);
       if (res.checkoutUrl) {
         window.location.assign(res.checkoutUrl);
         return;
       }
-      setDone({ id: res.orderId, domains: registered.map((d) => d.fqdn), preview: res.preview });
+      setDone({ id: res.orderId, preview: res.preview });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Checkout failed.";
       if (message === "Unauthorized") {
@@ -112,6 +86,35 @@ function CheckoutPage() {
 
   if (!user) return <RedirectToSignIn />;
 
+  if (domainMode) {
+    return (
+      <main className="mx-auto max-w-lg px-4 py-16 text-center">
+        <h1 className="font-display text-4xl">We do not sell domains</h1>
+        <p className="mt-3 text-muted">
+          rankER is not a registrar. Look the name up in RDAP, then register it elsewhere.
+        </p>
+        <Link to="/domains" className={cn(buttonVariants(), "mt-8 inline-flex")}>
+          RDAP search
+        </Link>
+      </main>
+    );
+  }
+
+  if (counselItem && !packItem && !planItem) {
+    return (
+      <main className="mx-auto max-w-lg px-4 py-16 text-center">
+        <h1 className="font-display text-4xl">We do not sell a signed letter</h1>
+        <p className="mt-3 text-muted">
+          {counselItem.name} is an illustrative future fee. Store a free request on Counsel Desk.
+          Nothing is signed.
+        </p>
+        <Link to="/counsel" className={cn(buttonVariants(), "mt-8 inline-flex")}>
+          Store a review request
+        </Link>
+      </main>
+    );
+  }
+
   if (done) {
     return (
       <main className="mx-auto max-w-lg px-4 py-16 text-center">
@@ -119,25 +122,16 @@ function CheckoutPage() {
         <p className="mt-3 text-muted">
           {done.preview
             ? `${label} is on file. Stripe is not configured here, so no card was charged.`
-            : `${label} is paid. Deliverables generate against this account.`}
+            : `${label} is paid. Template downloads and saved history apply to this account.`}
         </p>
         <p className="mt-2 font-mono text-xs text-subtle">{done.id}</p>
-        {done.domains[0] ? (
-          <Link
-            to="/domains/$fqdn"
-            params={{ fqdn: done.domains[0] }}
-            className="mt-6 inline-block text-sm underline"
-          >
-            Manage {done.domains[0]}
-          </Link>
-        ) : null}
-        {packItem && !counselItem ? (
+        {packItem ? (
           <p className="mt-4 text-sm text-muted">
-            Template pack. For a signed opinion letter,{" "}
+            Template pack. For a human review request,{" "}
             <Link to="/counsel" className="underline">
               open Counsel Desk
             </Link>
-            .
+            . We still do not sign it.
           </p>
         ) : null}
         <Link to="/" className="mt-8 block text-sm text-fg underline">
@@ -147,14 +141,14 @@ function CheckoutPage() {
     );
   }
 
-  const ready = domainMode ? cart.length > 0 : Boolean(packItem || planItem || counselItem);
+  const ready = Boolean(packItem || planItem);
 
   return (
     <main className="mx-auto max-w-lg px-4 py-14">
       <h1 className="font-display text-4xl">Checkout</h1>
       <p className="mt-2 text-muted">
         {ready
-          ? `${label} · $${amount.toLocaleString(undefined, { minimumFractionDigits: domainMode ? 2 : 0 })}${planItem && !domainMode ? "/mo" : domainMode ? " first year" : " one-time"}`
+          ? `${label} · $${amount.toLocaleString()}${planItem && !packItem ? "/mo" : packItem && planItem ? " (pack + first month)" : " one-time"}`
           : "No product selected."}
       </p>
       {!ready ? (
@@ -164,21 +158,20 @@ function CheckoutPage() {
       ) : (
         <form onSubmit={submit} className="mt-8 space-y-4">
           {err ? <p className="text-sm text-crit">{err}</p> : null}
-          {domainMode ? <p className="text-xs text-subtle">{ICANN_NOTICE}</p> : (
-            <p className="text-xs text-subtle">
-              Stripe Checkout when a live key is present. Otherwise the order is stored on
-              your account without a charge.
-            </p>
-          )}
+          <p className="text-xs text-subtle">
+            Stripe Checkout when a live key is present. Otherwise the order is stored on
+            your account without a charge. Plans save history. Packs unlock Markdown downloads.
+            We do not register domains or sign legal documents.
+          </p>
           <Button type="submit" size="lg" className="w-full" disabled={busy}>
-            {busy ? "Starting checkout…" : `Pay ${amount.toFixed(domainMode ? 2 : 0)}`}
+            {busy ? "Starting checkout…" : `Pay ${amount.toFixed(0)}`}
           </Button>
         </form>
       )}
       <button
         type="button"
         className="mt-6 text-sm text-subtle underline"
-        onClick={() => navigate({ to: domainMode ? "/domains" : "/pricing" })}
+        onClick={() => navigate({ to: "/pricing" })}
       >
         Cancel
       </button>

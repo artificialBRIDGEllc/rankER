@@ -56,10 +56,10 @@ export const NONPROFIT_CRITERIA = [
   },
   {
     title: "What $0 covers",
-    body: "Scholarships are usually Weekly Pulse or Growth Monitor for one property. Rebuild & Command and the HIPAA pack can be discounted; full $0 on those is rare and reviewed.",
+    body: "If approved, discounts apply to Saved history or Templates + export for one property. $0 is not automatic.",
   },
   {
     title: "How we decide",
-    body: "Budget, who you serve, and public benefit. Rural, senior, and underserved missions are weighted first. Written decision in five business days.",
+    body: "Budget, who you serve, and public benefit. A human reviews the stored request. No SLA we can keep until that desk exists.",
   },
 ] as const;

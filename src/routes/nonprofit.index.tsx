@@ -26,7 +26,7 @@ export const Route = createFileRoute("/nonprofit/")({
       {
         name: "description",
         content:
-          "501(c)(3) and public-benefit organizations can request 50–100% off rankER. Scholarships to $0 for qualifying orgs. Decision in five business days.",
+          "501(c)(3) and public-benefit organizations can request 50–100% off rankER. The request is stored. A human has to approve it. There is no automatic $0 plan and no five-day SLA.",
       },
     ],
   }),
@@ -102,10 +102,10 @@ function NonprofitPage() {
       <JsonLd
         data={{
           "@context": "https://schema.org",
-          "@type": "Offer",
+          "@type": "WebPage",
           name: "rankER Nonprofit Rate",
-          description: "Discounted and scholarship pricing for qualifying nonprofits, sometimes $0.",
-          eligibleCustomerType: "Nonprofit",
+          description:
+            "A form to request 50–100% off rankER. The request is stored. $0 is not automatic.",
         }}
       />
 
@@ -143,7 +143,7 @@ function NonprofitPage() {
       <section className="mx-auto max-w-2xl px-4">
         <h2 className="font-display text-3xl">Request a rate</h2>
         <p className="mt-2 text-sm text-muted">
-          Typical award for this profile:{" "}
+          Typical formula for this profile (not a promise):{" "}
           <span className="text-fg">
             {percent}% off {PLANS[plan].name}
           </span>
@@ -155,7 +155,7 @@ function NonprofitPage() {
               — ${monthly.toFixed(2)}/mo instead of ${list}
             </span>
           )}
-          . Final award is reviewed. Asking for $0 is allowed.
+          . The formula is illustrative. Final award is reviewed by a human. Asking for $0 is allowed.
         </p>
 
         <form onSubmit={submit} className="mt-8 space-y-5">
@@ -235,9 +235,9 @@ function NonprofitPage() {
                 value={plan}
                 onChange={(e) => setPlan(e.target.value as Exclude<PlanId, "free">)}
               >
-                <option value="tier1">Weekly Pulse · $49</option>
-                <option value="tier2">Growth Monitor · $149</option>
-                <option value="tier3">Rebuild & Command · $499</option>
+                <option value="tier1">Saved history · $49</option>
+                <option value="tier2">Templates + export · $149</option>
+                <option value="tier3">Portfolio · $499</option>
               </select>
             </div>
           </div>
@@ -320,8 +320,8 @@ function NonprofitPage() {
             Submit request
           </Button>
           <p className="text-xs text-subtle">
-            Preview stores the request locally. Production sends it to review with EIN verification.
-            Not a commitment until you receive a written award.
+            Preview stores the request on this device and, if you are signed in, on your account.
+            EIN is not verified automatically. Not a commitment until you receive a written award.
           </p>
         </form>
       </section>

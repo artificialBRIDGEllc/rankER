@@ -22,11 +22,11 @@ export const Route = createFileRoute("/compliance/hipaa")({
   component: HipaaPage,
   head: () => ({
     meta: [
-      { title: "HIPAA Compliance Pack — rankER" },
+      { title: "HIPAA-oriented templates — rankER" },
       {
         name: "description",
         content:
-          "HIPAA-grade website disclosures: Notice of Privacy Practices, BAA starter, PHI handling, telehealth, and Medicare/CMS language.",
+          "HIPAA-oriented website templates: NPP, BAA starter, PHI, telehealth, and CMS language. Not certification.",
       },
     ],
   }),
@@ -44,16 +44,15 @@ function HipaaPage() {
         <div className="mx-auto max-w-3xl text-center">
           <Badge tone="ok" className="mb-5">
             <Shield className="size-3.5" />
-            HIPAA + Healthcare Compliance Pack
+            HIPAA-oriented templates
           </Badge>
           <h1 className="font-display text-4xl sm:text-5xl">
-            Complete HIPAA disclosures
-            <span className="block text-muted">ready for the website</span>
+            HIPAA-oriented templates
+            <span className="block text-muted">not a signed NPP</span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-muted">
-            Notice of Privacy Practices, BAA starter language, PHI handling, breach policy,
-            telehealth notices, and Medicare/CMS marketing disclaimers — plus the full
-            Standard pack. Brand-matched. Install-ready.
+            Templates modeled on NPP, BAA, PHI, breach, telehealth, and CMS marketing language,
+            plus the standard pack. Download the Markdown. Have your own counsel finish them.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
@@ -65,11 +64,11 @@ function HipaaPage() {
               <ArrowRight className="size-4" />
             </Link>
             <Link to="/counsel" className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}>
-              Get it signed — $3,897
+              Request a review
             </Link>
           </div>
           <p className="mt-4 text-sm text-subtle">
-            Template $1,497 · Counsel sign-off $2,400 · for teams that do not have a lawyer yet.
+            Template download $1,497. Review requests are stored; no letter is issued automatically.
           </p>
         </div>
       </section>
@@ -130,9 +129,9 @@ function HipaaPage() {
           <div className="grid gap-4 md:grid-cols-4">
             {[
               ["01", "Purchase", "One-time checkout. No subscription required."],
-              ["02", "Details", "Legal name, jurisdiction, covered-entity status, brand tokens."],
-              ["03", "Generate", "HTML, React, and Markdown under elevated risk scoring."],
-              ["04", "Sign-off", "Counsel Desk signs, or you keep the template if you already have counsel."],
+              ["02", "Download", "Markdown templates with a TEMPLATE banner on every file."],
+              ["03", "Fill brackets", "Legal name, jurisdiction, covered-entity status, contact email."],
+              ["04", "Your counsel", "Have a lawyer you hire review them. rankER does not sign."],
             ].map(([step, title, desc]) => (
               <article key={step} className="rounded-2xl border border-border bg-bg p-6">
                 <p className="font-mono text-xs text-ok">{step}</p>
@@ -150,12 +149,12 @@ function HipaaPage() {
         <div className="flex gap-4 rounded-2xl border border-warn/30 bg-surface p-6">
           <AlertTriangle className="mt-0.5 size-5 shrink-0 text-warn" />
           <div>
-            <h3 className="font-medium text-fg">Templates vs signed packs</h3>
+            <h3 className="font-medium text-fg">Templates, not signed packs</h3>
             <p className="mt-2 text-sm text-muted">
-              The $1,497 pack is a structured template. If you already have healthcare counsel, they
-              should review it. If you do not — and most buyers do not — open Counsel Desk. A
-              licensed reviewer signs the website disclosures under a limited engagement. That is
-              not a general counsel relationship and not advice on clinical operations.
+              The $1,497 pack is structured Markdown. If you already have healthcare counsel, they
+              should review it. If you do not, store a request on Counsel Desk — we still do not
+              sign, and no reviewer is assigned. That is not a general counsel relationship and not
+              advice on clinical operations.
             </p>
             <Link to="/counsel" className="mt-3 inline-block text-sm underline">
               Open Counsel Desk
@@ -169,9 +168,9 @@ function HipaaPage() {
           <Lock className="size-3.5" />
           One-time · $1,497
         </Badge>
-        <h2 className="font-display text-3xl">Ready for HIPAA-grade disclosures?</h2>
+        <h2 className="font-display text-3xl">Need the HIPAA-oriented templates?</h2>
         <p className="mx-auto mt-3 max-w-lg text-muted">
-          Complete suite in minutes. Same governed engine that powers rankER audits.
+          Download the Markdown in one click. Same templates shown on this page.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
@@ -188,7 +187,7 @@ function HipaaPage() {
         </div>
         <p className="mt-5 inline-flex items-center gap-2 text-sm text-subtle">
           <ClipboardCheck className="size-4" />
-          Includes priority legal review checklist
+          Includes a counsel-review checklist you still have to use
         </p>
       </section>
     </main>

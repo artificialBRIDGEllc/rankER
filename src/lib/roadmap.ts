@@ -7,94 +7,58 @@ export const ROADMAP: Array<{
   detail: string;
 }> = [
   {
+    id: "live-fetch",
+    horizon: "now",
+    title: "Live HTML analysis",
+    detail:
+      "Shipped. Fetch the URL plus up to two same-host links. TTFB measured. Defects cite the HTML. Not Chrome lab.",
+  },
+  {
     id: "from-scratch",
     horizon: "now",
     title: "Build from scratch",
-    detail:
-      "Shipped. Industry brief → brand tokens, IA, copy, schema, and a live preview without an existing URL.",
+    detail: "Shipped as an in-app preview. You deploy it. We do not host the public domain.",
   },
   {
-    id: "nonprofit",
+    id: "templates",
     horizon: "now",
-    title: "Nonprofit scholarship rates",
-    detail:
-      "Shipped. 501(c)(3) request flow for 50–100% off, including $0 for qualifying small and underserved organizations.",
+    title: "Disclosure templates",
+    detail: "Shipped as Markdown downloads. Templates, not signed legal instruments.",
   },
   {
-    id: "domains",
+    id: "rdap",
     horizon: "now",
-    title: "Domain reseller storefront",
-    detail:
-      "Shipped as a preview. Search, cart, ICANN notice, attach to a generated site. Production: OpenSRS or Namecheap Reseller after Stripe.",
+    title: "Domain RDAP lookup",
+    detail: "Shipped. Public RDAP only. Not a registrar.",
+  },
+  {
+    id: "requests",
+    horizon: "now",
+    title: "Counsel and nonprofit request forms",
+    detail: "Shipped as stored requests. No in-house counsel. No five-day SLA we can keep.",
   },
   {
     id: "playwright-cwv",
-    horizon: "now",
-    title: "Lab Core Web Vitals capture",
-    detail:
-      "Shipped. Every audit now includes mobile lab LCP, INP, and CLS against 2026 thresholds, comparable week over week.",
+    horizon: "next",
+    title: "Real lab Core Web Vitals",
+    detail: "Not shipped. LCP/INP/CLS are not measured today.",
   },
   {
-    id: "doc-previews",
-    horizon: "now",
-    title: "Compliance document previews",
-    detail:
-      "Shipped. Brand-structured NPP, privacy, BAA, and CMS excerpts on every pack page before purchase.",
-  },
-  {
-    id: "analytics",
-    horizon: "now",
-    title: "Conversion analytics",
-    detail:
-      "Shipped as a local funnel on /insights. Production maps the same event names to a warehouse.",
+    id: "registrar",
+    horizon: "later",
+    title: "Actual domain registration",
+    detail: "Not shipped. Requires a contracted registrar after Stripe.",
   },
   {
     id: "temporal",
-    horizon: "next",
-    title: "Durable scheduled audits",
-    detail:
-      "Weekly and daily monitoring that survives restarts. Drift alerts when CWV or brand tokens regress.",
-  },
-  {
-    id: "figma-tokens",
-    horizon: "next",
-    title: "Figma + Tailwind token export",
-    detail:
-      "One brand system written to CSS variables, Tailwind config, and Figma tokens from a single audit.",
-  },
-  {
-    id: "jurisdiction",
-    horizon: "next",
-    title: "Jurisdiction-specific policy variants",
-    detail:
-      "California, EU, Texas, and other state overlays as pack add-ons without rewriting the core suite.",
+    horizon: "later",
+    title: "Scheduled re-audits",
+    detail: "Not shipped. Re-run is on demand.",
   },
   {
     id: "attorney-review",
-    horizon: "now",
-    title: "Counsel Desk — signed deliverables",
-    detail:
-      "Shipped. Limited engagement with licensed reviewers so organizations without a legal team can publish signed website disclosures instead of a homework disclaimer.",
-  },
-  {
-    id: "policy-updates",
     horizon: "later",
-    title: "Regulation-change update service",
-    detail:
-      "Subscription that regenerates packs when CMS, OCR, or state rules move — with a versioned change log.",
-  },
-  {
-    id: "white-label",
-    horizon: "later",
-    title: "Agency white-label + public API",
-    detail:
-      "Partners generate packs and audits under their own brand. Rebuild & Command unlocks the API.",
-  },
-  {
-    id: "vertical-schema",
-    horizon: "later",
-    title: "Vertical schema packs",
-    detail:
-      "Medicare, SaaS, and local-service JSON-LD kits that plug into the same implementation protocol.",
+    title: "Signed counsel letters",
+    detail: "Not shipped. Would require licensed reviewers under a real engagement.",
   },
 ];

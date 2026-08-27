@@ -44,7 +44,7 @@ export function SiteFooter() {
             ranker.theartificialbridge.com
           </a>
           <span className="mx-2">·</span>
-          Templates, or signed by Counsel Desk.
+          Templates. Not a signed letter.
         </p>
       </div>
     </footer>

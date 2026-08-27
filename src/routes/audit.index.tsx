@@ -50,9 +50,8 @@ function AuditPage() {
       <TrackPage name="view_audit" />
       <h1 className="font-display text-4xl">Free analysis</h1>
       <p className="mt-3 text-muted">
-        We fetch the live homepage — title, schema, images, tokens — then score
-        Core Web Vitals risk, SEO, authority, and brand. No account required to run.
-        Sign in to keep history.
+        We fetch the homepage and up to two internal links on the same host. TTFB is
+        measured. LCP, INP, and CLS are not. No account required. Sign in to save.
       </p>
       <form onSubmit={onSubmit} className="mt-8 space-y-4">
         <label className="block text-sm text-muted" htmlFor="url">
@@ -70,7 +69,7 @@ function AuditPage() {
         />
         {error ? <p className="text-sm text-crit">{error}</p> : null}
         <Button type="submit" size="lg" className="w-full" disabled={running}>
-          {running ? "Fetching live page…" : "Run analysis"}
+          {running ? "Fetching pages…" : "Run analysis"}
         </Button>
       </form>
       {running ? (

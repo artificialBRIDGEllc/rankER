@@ -7,7 +7,7 @@ import { ROADMAP, type Horizon } from "@/lib/roadmap";
 export const Route = createFileRoute("/roadmap")({ component: RoadmapPage });
 
 const LABELS: Record<Horizon, string> = {
-  now: "Building now",
+  now: "Shipped",
   next: "Next",
   later: "Later",
 };
@@ -18,8 +18,8 @@ function RoadmapPage() {
     <main className="mx-auto max-w-3xl px-4 py-14">
       <h1 className="font-display text-4xl">Future improvements</h1>
       <p className="mt-3 text-muted">
-        The product ships with free analysis, subscription tiers, governed copilot rules,
-        and compliance packs. This is what comes next — in the order we will build it.
+        What the product does today, what is not built yet, and what would require a registrar,
+        a lab, or licensed reviewers we do not have.
       </p>
       <div className="mt-12 space-y-12">
         {groups.map((horizon) => (

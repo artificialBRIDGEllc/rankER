@@ -3,7 +3,6 @@ import { Check } from "lucide-react";
 import { DocumentPreview } from "@/components/document-preview";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import { COUNSEL_PRODUCTS } from "@/lib/counsel";
 import { ONE_TIME_PACKS } from "@/lib/pricing";
 
 export const Route = createFileRoute("/compliance/standard")({
@@ -11,7 +10,6 @@ export const Route = createFileRoute("/compliance/standard")({
 });
 
 const pack = ONE_TIME_PACKS.compliance_standard;
-const counsel = COUNSEL_PRODUCTS.signoff_standard;
 
 function StandardPackPage() {
   return (
@@ -38,7 +36,7 @@ function StandardPackPage() {
             Template only · ${pack.price}
           </Link>
           <Link to="/counsel" className={cn(buttonVariants({ variant: "secondary", size: "lg" }), "inline-flex")}>
-            Signed · ${pack.price + counsel.price}
+            Request a review
           </Link>
         </div>
       </div>

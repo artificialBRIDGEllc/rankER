@@ -3,7 +3,6 @@ import { Check } from "lucide-react";
 import { DocumentPreview } from "@/components/document-preview";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import { COUNSEL_PRODUCTS } from "@/lib/counsel";
 import { ONE_TIME_PACKS } from "@/lib/pricing";
 
 export const Route = createFileRoute("/compliance/regulated")({
@@ -11,7 +10,6 @@ export const Route = createFileRoute("/compliance/regulated")({
 });
 
 const pack = ONE_TIME_PACKS.compliance_regulated;
-const counsel = COUNSEL_PRODUCTS.signoff_regulated;
 
 function RegulatedPackPage() {
   return (
@@ -38,7 +36,7 @@ function RegulatedPackPage() {
             Template only · ${pack.price.toLocaleString()}
           </Link>
           <Link to="/counsel" className={cn(buttonVariants({ variant: "secondary", size: "lg" }), "inline-flex")}>
-            Signed · ${(pack.price + counsel.price).toLocaleString()}
+            Request a review
           </Link>
         </div>
       </div>

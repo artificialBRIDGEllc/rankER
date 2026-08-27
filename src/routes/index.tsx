@@ -1,13 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
-import { CountUp } from "@/components/count-up";
 import { JsonLd } from "@/components/json-ld";
 import { ScoreRing } from "@/components/score-ring";
 import { TrackPage } from "@/components/track-page";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import { FAQ, LAB_LIFTS, LAB_NOTE } from "@/lib/proof";
+import { FAQ, LAB_NOTE } from "@/lib/proof";
 import { ONE_TIME_PACKS, PLANS } from "@/lib/pricing";
 import { useAppStore } from "@/lib/store";
 import { Wordmark } from "@/components/wordmark";
@@ -16,27 +15,27 @@ export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "rankER — Elite ranking, brand, HIPAA, domains" },
+      { title: "rankER — Fetch the pages. Score what we can prove." },
       {
         name: "description",
         content:
-          "Free website analysis for top-1% ranking. Build from scratch, register the domain, ship HIPAA disclosures. Governed copilot. Core Web Vitals, brand unity, conversion.",
+          "Free live HTML analysis of your homepage and two internal pages. Defects with evidence. Templates, not legal advice. We do not rank you in Google.",
       },
     ],
   }),
 });
 
 const TICKER = [
-  "LCP ≤ 2.5s",
-  "INP ≤ 200ms",
-  "CLS ≤ 0.1",
-  "Brand ≥ 9.5",
-  "Schema graph",
-  "HIPAA NPP",
-  "Title CTR",
-  "Form conversion",
-  ".health / .care",
-  "Governed apply",
+  "Live HTML fetch",
+  "Homepage + 2 links",
+  "Measured TTFB",
+  "JSON-LD check",
+  "Image dimensions",
+  "Template packs",
+  "RDAP lookup",
+  "No live writes",
+  "Not CrUX",
+  "Not a registrar",
 ];
 
 function Home() {
@@ -54,7 +53,7 @@ function Home() {
               applicationCategory: "BusinessApplication",
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
               description:
-                "Website ranking, brand unification, HIPAA compliance packs, from-scratch builds, and domain reseller.",
+                "Live HTML analysis, downloadable disclosure templates, in-app site preview, RDAP domain lookup.",
             },
             {
               "@type": "FAQPage",
@@ -82,16 +81,17 @@ function Home() {
         <div className="relative mx-auto flex min-h-[72vh] max-w-6xl flex-col justify-end px-4 pb-16 pt-24 md:pb-20">
           <Badge tone="muted" className="reveal mb-5 w-fit">
             <Sparkles className="size-3.5" />
-            Lab CWV · Brand 9.5 · HIPAA packs
+            Live fetch · HTML risk · templates
           </Badge>
           <Wordmark tone="display" className="reveal mb-3 text-2xl text-fg sm:text-3xl" />
           <h1 className="reveal reveal-d1 max-w-3xl font-display text-4xl text-fg sm:text-6xl md:text-[4.2rem]">
-            Rank in the top 1%.
-            <span className="mt-1 block italic text-accent">Then look like it.</span>
+            Fetch the pages.
+            <span className="mt-1 block italic text-accent">Score what we can prove.</span>
           </h1>
           <p className="reveal reveal-d2 mt-5 max-w-xl text-base text-muted sm:text-lg">
-            Technical SEO, Core Web Vitals, authority, and brand — shipped as tokens, patches,
-            and disclosures. Free analysis. From-scratch builds. Domains included.
+            We fetch your public HTML and score technical signals, SEO markup, authority
+            markers, and brand tokens. Free. We do not change your live site, register a
+            domain, or sign legal documents.
           </p>
           <div className="reveal reveal-d3 mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
@@ -121,21 +121,17 @@ function Home() {
 
       <section className="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-[1.1fr_0.9fr] md:items-center">
         <div>
-          <p className="text-xs tracking-[0.18em] text-accent uppercase">Conversion, measured</p>
-          <h2 className="mt-3 font-display text-3xl md:text-4xl">The product is the lift, not the report.</h2>
+          <p className="text-xs tracking-[0.18em] text-accent uppercase">What we measure</p>
+          <h2 className="mt-3 font-display text-3xl md:text-4xl">The product is the fetch, not a ranking.</h2>
           <p className="mt-3 max-w-lg text-muted">{LAB_NOTE}</p>
           <dl className="mt-8 grid grid-cols-2 gap-4">
             <div className="rounded-2xl border border-border bg-surface p-5">
-              <dt className="text-sm text-muted">Median form conversion</dt>
-              <dd className="mt-1 font-display text-3xl">
-                <CountUp to={3.4} suffix="%" />
-              </dd>
+              <dt className="text-sm text-muted">Pages fetched</dt>
+              <dd className="mt-1 font-display text-3xl">1–3</dd>
             </div>
             <div className="rounded-2xl border border-border bg-surface p-5">
-              <dt className="text-sm text-muted">Title CTR after rewrite</dt>
-              <dd className="mt-1 font-display text-3xl">
-                <CountUp to={4.6} suffix="%" />
-              </dd>
+              <dt className="text-sm text-muted">TTFB</dt>
+              <dd className="mt-1 font-display text-3xl">Measured</dd>
             </div>
           </dl>
         </div>
@@ -153,36 +149,15 @@ function Home() {
       <section className="border-y border-border bg-surface py-16">
         <div className="mx-auto max-w-6xl px-4">
           <header className="mb-10 max-w-xl">
-            <h2 className="font-display text-3xl">Four scores. One threshold.</h2>
-            <p className="mt-2 text-muted">Top 1% is 92 overall with zero critical CWV fails.</p>
+            <h2 className="font-display text-3xl">Four scores. From the HTML.</h2>
+            <p className="mt-2 text-muted">Internal 0–100 model. 92 is a high bar on this card, not a Google percentile.</p>
           </header>
+          <p className="mb-6 text-sm text-subtle">Layout only — run a URL for live numbers.</p>
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-            <ScoreRing value={96} label="Core Web Vitals" />
-            <ScoreRing value={91} label="SEO foundation" />
-            <ScoreRing value={88} label="Authority" />
-            <ScoreRing value={94} label="Brand unity" />
-          </div>
-          <div className="mt-12 overflow-x-auto">
-            <table className="w-full min-w-[36rem] text-left text-sm">
-              <thead className="text-muted">
-                <tr>
-                  <th className="pb-3 font-medium">Signal</th>
-                  <th className="pb-3 font-medium">Before</th>
-                  <th className="pb-3 font-medium">After</th>
-                  <th className="pb-3 font-medium">Delta</th>
-                </tr>
-              </thead>
-              <tbody>
-                {LAB_LIFTS.map((row) => (
-                  <tr key={row.id} className="border-t border-border">
-                    <td className="py-3">{row.label}</td>
-                    <td className="py-3 font-mono text-subtle">{row.before}</td>
-                    <td className="py-3 font-mono">{row.after}</td>
-                    <td className="py-3 font-mono text-ok">{row.delta}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <ScoreRing value={0} label="HTML vitals risk" />
+            <ScoreRing value={0} label="SEO markup" />
+            <ScoreRing value={0} label="Authority markers" />
+            <ScoreRing value={0} label="Brand tokens" />
           </div>
         </div>
       </section>
@@ -193,23 +168,23 @@ function Home() {
             {
               k: "Path A",
               t: "Analyze an existing site",
-              d: "Four-layer scorecard, ranked defects, tokens, governed copilot.",
+              d: "Fetch 1–3 pages. Scorecard from HTML. Copilot cannot write to the site.",
               to: "/audit" as const,
               c: "Free analysis",
             },
             {
               k: "Path B",
               t: "Build from scratch",
-              d: "Industry brief to a brand-locked site with schema and compliance stubs.",
+              d: "In-app preview from a brief. You deploy it. We do not host the domain.",
               to: "/build" as const,
               c: "Start a brief",
             },
             {
               k: "Path C",
-              t: "Register the domain",
-              d: "Reseller search across .com to .health. Privacy included. Attach to the build.",
+              t: "Look up the domain",
+              d: "RDAP lookup. We do not register names, privacy, DNS, or SSL.",
               to: "/domains" as const,
-              c: "Search domains",
+              c: "RDAP search",
             },
           ].map((card) => (
             <article
@@ -243,10 +218,10 @@ function Home() {
           </header>
           <div className="grid gap-4 md:grid-cols-4">
             {[
-              ["01", "Technical", "CWV, crawl, schema, mobile parity, performance blockers."],
-              ["02", "Authority", "Intent match, information gain, E-E-A-T, AI Overview structure."],
-              ["03", "Brand", "Color, type, spacing, voice, and component cohesion to 9.5+."],
-              ["04", "Ship", "Tokens, patches, schema, and disclosure packs ready to install."],
+              ["01", "Technical", "TTFB, HTML size, scripts, image dimensions, schema tags."],
+              ["02", "Authority", "HTTPS, author markup, JSON-LD. Not a ranking or E-E-A-T verdict."],
+              ["03", "Brand", "Hard-coded hex and button-class drift in the HTML we fetched."],
+              ["04", "Output", "Suggested tokens, defect list, downloadable templates. No live install."],
             ].map(([step, title, desc]) => (
               <article key={step} className="rounded-2xl border border-border bg-bg/80 p-6">
                 <p className="font-mono text-xs text-accent">{step}</p>
@@ -261,11 +236,11 @@ function Home() {
       <section className="bg-surface py-20">
         <div className="mx-auto max-w-6xl px-4">
           <header className="mb-10 text-center">
-            <h2 className="font-display text-3xl">Simple pricing. Clear jumps.</h2>
-            <p className="mt-2 text-muted">Free forever. Upgrade only when cadence or rebuild power is required.</p>
+            <h2 className="font-display text-3xl">What you can buy</h2>
+            <p className="mt-2 text-muted">Free analysis stays free. Paid tiers save history and unlock template downloads.</p>
             <p className="mt-2 text-sm text-subtle">
               <Link to="/nonprofit" className="underline hover:text-fg">
-                Nonprofits can request 50–100% off, including $0
+                Nonprofits can request a discount — a human decides
               </Link>
             </p>
           </header>
@@ -279,7 +254,7 @@ function Home() {
                 )}
               >
                 {plan.popular ? (
-                  <p className="mb-2 text-xs font-medium text-accent">Most chosen</p>
+                  <p className="mb-2 text-xs font-medium text-accent">Includes template download</p>
                 ) : null}
                 <p className="text-sm text-muted">{plan.name}</p>
                 <p className="mt-1 font-display text-3xl">
@@ -314,9 +289,9 @@ function Home() {
 
       <section className="mx-auto max-w-6xl px-4 py-20">
         <header className="mb-10 text-center">
-          <h2 className="font-display text-3xl">One-time compliance packs</h2>
+          <h2 className="font-display text-3xl">One-time template packs</h2>
           <p className="mx-auto mt-2 max-w-2xl text-muted">
-            Brand-matched disclosures. HIPAA and regulated packs run under elevated governance.
+            Downloadable Markdown templates. Not legal advice. Not a signed NPP or BAA.
           </p>
         </header>
         <div className="grid gap-4 md:grid-cols-3">
@@ -360,9 +335,9 @@ function Home() {
       </section>
 
       <section className="border-t border-border px-4 py-20 text-center">
-        <h2 className="font-display text-3xl">Run the score. Then ship it.</h2>
+        <h2 className="font-display text-3xl">Run the fetch. Read the defects.</h2>
         <p className="mx-auto mt-3 max-w-lg text-muted">
-          Free analysis in minutes. Or skip the URL and build the property from a blank brief.
+          Fetch takes seconds. Or skip the URL and generate an in-app preview from a brief.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link to="/audit" className={cn(buttonVariants({ size: "lg" }), "inline-flex")}>
